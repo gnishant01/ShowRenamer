@@ -44,7 +44,7 @@ def fetchNamesFromIMDb():
 		seasonPage = Page(allSeasonsList[seasonNumber].get('href'))
 		seasonHtml = seasonPage.getHtml()
 		episodeListDiv = seasonHtml.find_all("div", {"class" : "info"})
-		currentSeasonEpisode = []
+		currentSeasonEpisode = {}
 		for episodeNumber in range(0, len(episodeListDiv)):
 			episodeTitle = episodeListDiv[episodeNumber].strong.get_text()
 			episodeName = seriesName
@@ -61,9 +61,9 @@ def fetchNamesFromIMDb():
 			# removing the '/' & '?' characters from filename 
 			episodeName = episodeName.replace('/', '-')
 			episodeName = episodeName.replace('?', '!')
-			currentSeasonEpisode.append(episodeName)
+			currentSeasonEpisode[episodeNumber] = episodeName
 		print '----- Season', (seasonNumber + 1), 'episode names fetched -----'
-		seasonWiseEpisodes.append(currentSeasonEpisode)
+		seasonWiseEpisodes[seasonNumber] = currentSeasonEpisode
 
 
 # get episode name stored in the seasonWiseEpisodes list
@@ -89,7 +89,7 @@ for seasonNumber in range(0, int(numOfSeasons / 2)):
 	allSeasonsList[seasonNumber] = allSeasonsList[numOfSeasons - seasonNumber - 1]
 	allSeasonsList[numOfSeasons - seasonNumber - 1] = tempSeason
 
-seasonWiseEpisodes = []
+seasonWiseEpisodes = {}
 fetchNamesFromIMDb()
 
 os.chdir(path)
